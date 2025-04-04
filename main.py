@@ -42,4 +42,12 @@ def get_post_by_id(post_id:str):
             return post
     raise HTTPException(status_code=404, detail='Post no encontrado')
 
-#
+# Endpotin para eleminar un post por su ID
+@app.delete('/posts/delete/{post_id}')
+def delete_post(post_id:str):
+    for index, post in enumerate(posts):
+        if post['id'] == post_id:
+            posts.pop(index)
+            return {'message':'Post eliminado satisfactoriamente'}
+    raise HTTPException(status_code=404, detail='Post no encontrado')
+
