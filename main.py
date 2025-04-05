@@ -9,7 +9,7 @@ app = FastAPI()
 
 posts = []
 
-# Post Model
+# Clase para Post Model
 class Post(BaseModel):
     id: str
     title: str
@@ -18,6 +18,14 @@ class Post(BaseModel):
     created_at: datetime = datetime.now()
     published_at: Optional[datetime]
     published: bool = False
+
+# Clase para actualizar Post Model
+class PostUpdate(BaseModel):
+    title: str
+    author: str
+    content: Text
+    created_at: datetime = datetime.now()
+
 
 @app.get("/")
 def read_root():
@@ -51,3 +59,11 @@ def delete_post(post_id:str):
             return {'message':'Post eliminado satisfactoriamente'}
     raise HTTPException(status_code=404, detail='Post no encontrado')
 
+# Endpoint para actualizar un post
+@app.put('/posts/update/{post_id}')
+def update_post(post_id:str, updatedPost:PostUpdate):
+    for post in posts:
+        if post['id'] == post_id:
+            post.update(updatedPost.dict())
+            return {'message':'Post actualizado correctamente'}
+    raise HTTPException(status_code=404, detail='Post no encontrado')
